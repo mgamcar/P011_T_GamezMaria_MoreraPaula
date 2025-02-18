@@ -8,14 +8,27 @@ public class PlayerAnimControl : MonoBehaviour
     [SerializeField] SpriteRenderer sprite;
     Rigidbody2D rb;
 
-    //Correr
-    public int speed = 6;
+    //Muerte
+    public bool endGame = false;
 
-    //Salto
+    [Header("Correr")]
+    public int normalSpeed = 8;
+    //Sprint tiempo
+    public int sprintSpeed = 20;
+    private float sprintDuration = 0.1f;
+    private float sprintTimer = 0f;
+    private float timeBetweenSprint = 4f;
+    private float timeSinceSprint = 0;
+
+    [Header("Saltar")]
     public int jump = 10;
 
     //Sprite Derecha-Izquierda
     public static bool right = true;
+
+    //Ataque
+    public static bool QAtack = false;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,55 +39,111 @@ public class PlayerAnimControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Tipo de movimiento
-        float inputX = Input.GetAxis("Horizontal");
-        rb.linearVelocity = new Vector2(inputX * speed, rb.linearVelocity.y);
-
-        if (inputX > 0)
-        { //Derecha
-            sprite.flipX = false;
-            right = true;
-        }
-        else if (inputX < 0)
-        {  //Izquierda
-            sprite.flipX = true;
-            right = false;
-        }
-
-        //Correr
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+        //Muerte NO
+        if (!endGame)
         {
-            anim.SetBool("isRunning", true);
+
+            //Tipo de movimiento
+            float inputX = Input.GetAxis("Horizontal");
+            rb.linearVelocity = new Vector2(inputX * normalSpeed, rb.linearVelocity.y);
+
+            if (inputX > 0)
+            { //Derecha
+                sprite.flipX = false;
+                right = true;
+            }
+            else if (inputX < 0)
+            {  //Izquierda
+                sprite.flipX = true;
+                right = false;
+            }
+
+            //Correr
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+            {
+                anim.SetBool("isRunning", true);
+            }
+            else
+            {
+                anim.SetBool("isRunning", false);
+            }
+
+            //Sprint
+            timeSinceSprint += Time.deltaTime;
+
+            if (Input.GetKeyDown(KeyCode.LeftShift) && sprintTimer <= 0f && timeSinceSprint >= timeBetweenSprint)
+            {
+                normalSpeed = sprintSpeed;
+                sprintTimer = sprintDuration;
+                timeSinceSprint = 0f;
+            }
+            if (sprintTimer > 0f)
+            {
+                sprintTimer -= Time.deltaTime;
+            }
+            else
+            {
+                normalSpeed = 6;
+            }
+
+
+            //Salto
+            if (Grounded() == false)
+            {
+                anim.SetBool("isJumping", true);
+            }
+            else
+            {
+                anim.SetBool("isJumping", false);
+            }
+
+            //Si está presionado el espacio y el tiempo de juego - la última vez que saltó es mayor que 1 (jumpCooldown) si puedes saltar
+            if (Input.GetKeyDown(KeyCode.Space) && Grounded())
+            {
+                rb.AddForce(Vector2.up * jump, ForceMode2D.Impulse);
+            }
+
+            //QuickAtack
+            if (Input.GetMouseButton(0))
+            {
+                anim.SetBool("isQAtacking", true);
+                QAtack = true;
+
+
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                anim.SetBool("isQAtacking", false);
+                QAtack = false;
+            }
+
+            //SlowAtack
+            if (Input.GetMouseButton(1))
+            {
+                anim.SetBool("isSAtacking", true);
+                Invoke("SlowA", 1);
+            }
+
+            //Falling
+            if (rb.linearVelocityY < 0)
+            {
+                anim.SetBool("isFalling", true);
+            }
+            else
+            {
+                anim.SetBool("isFalling", false);
+            }
+
+
         }
         else
         {
-            anim.SetBool("isRunning", false);
-        }
-
-        //Salto
-        if (Grounded() == false)
-        {
-            anim.SetBool("isJumping", true);
-        }
-        else
-        {
-            anim.SetBool("isJumping", false);
-        }
-
-        //Si está presionado el espacio y el tiempo de juego - la última vez que saltó es mayor que 1 (jumpCooldown) si puedes saltar
-        if (Input.GetKeyDown(KeyCode.Space) && Grounded())
-        {
-            rb.AddForce(Vector2.up * jump, ForceMode2D.Impulse);
-        }
-
-        //QuickAtack
-        if (Input.GetMouseButtonDown(0)){
-            anim.SetBool("isQAtacking", true);
+            rb.linearVelocity = Vector2.zero;
+            anim.SetTrigger("hasDied");
 
         }
-        if (Input.GetMouseButtonUp(0)){
-            anim.SetBool("isQAtacking", false);
-        }
+
+
 
     }
 
@@ -92,4 +161,12 @@ public class PlayerAnimControl : MonoBehaviour
             return true;
         }
     }
+
+
+    //SlowAtack
+    void SlowA()
+    {
+        anim.SetBool("isSAtacking", false);
+    }
+
 }
