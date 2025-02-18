@@ -1,14 +1,18 @@
+using System;
 using UnityEngine;
 
 public class PlayerAnimControl : MonoBehaviour
 {
-    Animator anim;
+    [SerializeField] Animator anim;
 
     [SerializeField] SpriteRenderer sprite;
+    Rigidbody2D rb;
+
+    //Correr
+    public int speed = 6;
 
     //Salto
-    [SerializeField] float jumpCooldown = 1;
-    float lastJump = 0;
+    public int jump = 10;
 
     //Sprite Derecha-Izquierda
     public static bool right = true;
@@ -16,21 +20,22 @@ public class PlayerAnimControl : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //Tipo de movimiento
-        float movementX = Input.GetAxis("Horizontal");
+        float inputX = Input.GetAxis("Horizontal");
+        rb.linearVelocity = new Vector2(inputX * speed, rb.linearVelocity.y);
 
-        if (movementX > 0)
+        if (inputX > 0)
         { //Derecha
             sprite.flipX = false;
             right = true;
         }
-        else if (movementX < 0)
+        else if (inputX < 0)
         {  //Izquierda
             sprite.flipX = true;
             right = false;
@@ -49,22 +54,34 @@ public class PlayerAnimControl : MonoBehaviour
         //Salto
         if (Grounded() == false)
         {
-            //Si está presionado el espacio y el tiempo de juego - la última vez que saltó es mayor que 1 (jumpCooldown) si puedes saltar
-            if (Input.GetKeyDown(KeyCode.Space) && (Time.time - lastJump > jumpCooldown))
-            {
-                //La última vez que saltó = tiempo de juego
-                lastJump = Time.time;
-                anim.SetTrigger("hasJumped");
-            }
+            anim.SetBool("isJumping", true);
+        }
+        else
+        {
+            anim.SetBool("isJumping", false);
         }
 
+        //Si está presionado el espacio y el tiempo de juego - la última vez que saltó es mayor que 1 (jumpCooldown) si puedes saltar
+        if (Input.GetKeyDown(KeyCode.Space) && Grounded())
+        {
+            rb.AddForce(Vector2.up * jump, ForceMode2D.Impulse);
+        }
+
+        //QuickAtack
+        if (Input.GetMouseButtonDown(0)){
+            anim.SetBool("isQAtacking", true);
+
+        }
+        if (Input.GetMouseButtonUp(0)){
+            anim.SetBool("isQAtacking", false);
+        }
 
     }
 
     //Comprobar si está en el suelo con verdadero-falso
     bool Grounded()
     {
-        RaycastHit2D touch = Physics2D.Raycast(transform.position, Vector2.down, 0.1f);
+        RaycastHit2D touch = Physics2D.Raycast(transform.position, Vector2.down, 0.2f);
 
         if (touch.collider == null)
         {
