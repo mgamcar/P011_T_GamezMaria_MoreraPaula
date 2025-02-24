@@ -107,6 +107,7 @@ public class PlayerAnimControl : MonoBehaviour
             if (Input.GetMouseButton(0))
             {
                 anim.SetBool("isQAtacking", true);
+
                 QAtack = true;
 
 
