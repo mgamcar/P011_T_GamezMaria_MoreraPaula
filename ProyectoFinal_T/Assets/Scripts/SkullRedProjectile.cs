@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class SkullRed_Projectile : MonoBehaviour
@@ -31,7 +30,7 @@ public class SkullRed_Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other){
         if (other.gameObject.tag == "Player"){
-            //other.gameObject.GetComponent<FinalEnemyControl>().vidaMenos();
+            other.gameObject.GetComponent<PlayerAnimControl>().Daño();
             destroyShot();
         }
     }

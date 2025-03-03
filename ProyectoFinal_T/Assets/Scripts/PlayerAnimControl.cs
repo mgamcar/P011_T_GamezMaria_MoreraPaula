@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerAnimControl : MonoBehaviour
 {
@@ -16,11 +17,18 @@ public class PlayerAnimControl : MonoBehaviour
 
     //Sprite Derecha-Izquierda
     public static bool right = true;
+    public static bool QAtack = false;
 
     [Header("Pegar Derecha-Izquierda")]
     [SerializeField] GameObject WeaponRight;
     [SerializeField] GameObject WeaponLeft;
-    public static bool Daño = false;
+
+
+    [Header("Vida")]
+    [SerializeField] Slider PlayerBar;
+    [SerializeField] float health = 100;
+    [SerializeField] float dps = 30;
+    bool Dead = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,6 +39,11 @@ public class PlayerAnimControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Es lo mismo que meter todo en el if de seimrpre ese raro de Paco de Dead == true y no hace nada
+        if (Dead == true){
+            return;
+        }
+
         //Tipo de movimiento
         float inputX = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(inputX * speed, rb.linearVelocity.y);
@@ -75,24 +88,42 @@ public class PlayerAnimControl : MonoBehaviour
         //QuickAtack
         if (Input.GetMouseButtonDown(0)){
             anim.SetBool("isQAtacking", true);
-            
+            QAtack = true;
+
             if (right == true){
-               WeaponRight.SetActive(true);
-               Daño = true;
+                WeaponRight.SetActive(true);
+
             } else {
                 WeaponLeft.SetActive(true);
-                Daño = true;
+
             }
 
         }
         if (Input.GetMouseButtonUp(0)){
             anim.SetBool("isQAtacking", false);
+            QAtack = false;
             WeaponRight.SetActive(false);
             WeaponLeft.SetActive(false);
-            Daño = false;
-
         }
 
+        
+
+    }
+
+    public void Daño(){
+        health = health - dps;
+        PlayerBar.value = health;
+        anim.SetBool("isHit", true);
+        Invoke ("HasBeenHit", 0.5f);
+
+        if (health <= 0){
+            anim.SetTrigger("hasDied");
+            Dead = true;
+        }
+    }
+
+    void HasBeenHit(){
+        anim.SetBool("isHit", false);
     }
 
     //Comprobar si está en el suelo con verdadero-falso

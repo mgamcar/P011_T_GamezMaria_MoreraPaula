@@ -65,15 +65,19 @@ public class SkullRedControl : MonoBehaviour
             fase2Coroutine = StartCoroutine(Fase2());  // Iniciar Fase2
         }
 
+        if (health <= 0){
+            Destroy (gameObject);
+        }
+
        
 
     }
 
     //Daño
     void OnTriggerEnter2D (Collider2D other){
-        if (other.gameObject.tag == "Player"){
+        if (other.gameObject.tag == "PlayerArma"){
             Dentro = true;
-            if (Dentro == true){
+            if (Dentro == true && PlayerAnimControl.QAtack == true){
                 health = health - dps * Time.deltaTime;
                 BossBar.value = health;    
             }
@@ -82,7 +86,7 @@ public class SkullRedControl : MonoBehaviour
     }
 
     void OnTriggerExit2D (Collider2D other){
-        if (other.gameObject.tag == "Player"){
+        if (other.gameObject.tag == "PlayerArma"){
             Dentro = false;
         }
     }

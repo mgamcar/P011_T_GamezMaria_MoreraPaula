@@ -21,7 +21,7 @@ public class ButtonsMenu : MonoBehaviour
 
     public void Play(){
         ButtonStart.SetActive(false);
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Level1");
         
     }
 

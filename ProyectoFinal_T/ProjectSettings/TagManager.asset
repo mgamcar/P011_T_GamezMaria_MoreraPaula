@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - ManaSprite
+  - HealthSprite
+  - PlayerArma
   layers:
   - Default
   - TransparentFX
