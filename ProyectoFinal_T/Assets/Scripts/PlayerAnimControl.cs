@@ -106,7 +106,14 @@ public class PlayerAnimControl : MonoBehaviour
             WeaponLeft.SetActive(false);
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }    
+        
     }
+
+    
 
     public void Daño(){
         health = health - dps;
@@ -114,7 +121,7 @@ public class PlayerAnimControl : MonoBehaviour
         anim.SetBool("isHit", true);
         Invoke ("HasBeenHit", 0.5f);
 
-        if (health <= 0){
+        if (health <= 0 && Dead == false){
             anim.SetTrigger("hasDied");
             Dead = true;
         }
@@ -145,27 +152,12 @@ public class PlayerAnimControl : MonoBehaviour
         if (other.gameObject.tag == "Item")
         {
             Destroy(other.gameObject);
-            items++;
-            if (items == 8)
-            {
-                // endGame = true;
-                Invoke("Level2", 3);
-            }
+            health = health + dps;
+            PlayerBar.value = health;
+
         }
     }
 
-    // void goToMenu()
-    // {
-    //     SceneManager.LoadScene("MainMenu");
-    // }
+    
 
-    //  void goToCredits()
-    // {
-    //     SceneManager.LoadScene("Credits");
-    // }
-
-    //  void Nivel2()
-    // {
-    //     SceneManager.LoadScene("Level2");
-    // }
 }

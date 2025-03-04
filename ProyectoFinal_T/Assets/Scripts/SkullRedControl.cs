@@ -104,11 +104,14 @@ public class SkullRedControl : MonoBehaviour
             yield  return new WaitForSeconds(timeBetweenShoots);
             Instantiate (RedSkull_Projectile, transform.position, Quaternion.identity);
 
-            Vector3 secondProjectilePosition = transform.position + new Vector3(1f, 1f, 0);
+            Vector3 secondProjectilePosition = transform.position + new Vector3(2f, 0f, 0);
             Instantiate(RedSkull_Projectile, secondProjectilePosition, Quaternion.identity);
 
-            Vector3 thirdProjectilePosition = transform.position + new Vector3(2f, 2f, 0);
-            Instantiate(RedSkull_Projectile, thirdProjectilePosition, Quaternion.identity); 
+            Vector3 thirdProjectilePosition = transform.position + new Vector3(1f, 2f, 0);
+            Instantiate(RedSkull_Projectile, thirdProjectilePosition, Quaternion.identity);
+
+            Vector3 fourProjectilePosition = transform.position + new Vector3(1f, -2f, 0);
+            Instantiate(RedSkull_Projectile, fourProjectilePosition, Quaternion.identity); 
         }
         
     }
