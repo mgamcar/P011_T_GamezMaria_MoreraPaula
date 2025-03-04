@@ -28,6 +28,7 @@ public class PlayerAnimControl : MonoBehaviour
     [SerializeField] Slider PlayerBar;
     [SerializeField] float health = 100;
     [SerializeField] float dps = 30;
+    [SerializeField] int items = 0;
     bool Dead = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -97,7 +98,6 @@ public class PlayerAnimControl : MonoBehaviour
                 WeaponLeft.SetActive(true);
 
             }
-
         }
         if (Input.GetMouseButtonUp(0)){
             anim.SetBool("isQAtacking", false);
@@ -105,8 +105,6 @@ public class PlayerAnimControl : MonoBehaviour
             WeaponRight.SetActive(false);
             WeaponLeft.SetActive(false);
         }
-
-        
 
     }
 
@@ -140,4 +138,34 @@ public class PlayerAnimControl : MonoBehaviour
             return true;
         }
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+
+        if (other.gameObject.tag == "Item")
+        {
+            Destroy(other.gameObject);
+            items++;
+            if (items == 8)
+            {
+                // endGame = true;
+                Invoke("Level2", 3);
+            }
+        }
+    }
+
+    // void goToMenu()
+    // {
+    //     SceneManager.LoadScene("MainMenu");
+    // }
+
+    //  void goToCredits()
+    // {
+    //     SceneManager.LoadScene("Credits");
+    // }
+
+    //  void Nivel2()
+    // {
+    //     SceneManager.LoadScene("Level2");
+    // }
 }

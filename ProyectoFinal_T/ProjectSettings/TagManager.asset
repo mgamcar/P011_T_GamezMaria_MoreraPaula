@@ -8,6 +8,7 @@ TagManager:
   - ManaSprite
   - HealthSprite
   - PlayerArma
+  - Item
   layers:
   - Default
   - TransparentFX
