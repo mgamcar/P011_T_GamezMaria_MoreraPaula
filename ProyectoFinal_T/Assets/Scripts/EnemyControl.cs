@@ -13,7 +13,7 @@ public class EnemyControl : MonoBehaviour
 
     float lives = 1;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    //Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         startPosition = transform.position;
@@ -48,11 +48,11 @@ public class EnemyControl : MonoBehaviour
         }
 
 
-        if (transform.position.x < previousXPos)
+        if (transform.position.x > previousXPos)
         {
             sprite.flipX = true;
         }
-        else if (transform.position.x > previousXPos)
+        else if (transform.position.x < previousXPos)
         {
             sprite.flipX = false;
         }

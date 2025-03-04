@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6266214512379920719}
   - component: {fileID: 4855608574705882260}
   - component: {fileID: 2429724606310070054}
-  - component: {fileID: 3072658331665607757}
   m_Layer: 0
   m_Name: EnemyBat
   m_TagString: Untagged
@@ -149,18 +148,3 @@ CapsuleCollider2D:
   m_Offset: {x: -0.048656583, y: -0.26539886}
   m_Size: {x: 3.2056344, y: 3.2056344}
   m_Direction: 0
---- !u!114 &3072658331665607757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4670836129856773665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0915407b8a2c4fa48bc2a62aa43349c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 8
-  endPosition: {x: 5, y: 5, z: 0}
-  sprite: {fileID: 6266214512379920719}
